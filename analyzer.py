@@ -1,51 +1,47 @@
-import stringdata as sd
+import stringdata
 import time
 
-def linear_search(container, element: str):
-    for word_idx in range(0,len(container)):
-        if container[word_idx]==element:
-            return word_idx
-        
-    return -1
+def linear_search(container, element):
+    # traverses every element in container until an element is equal t
+    for i, data in enumerate(container):
+        if data == element:
+            return i
+    # If no element is found return None
+    return None
 
-def binary_search(container, element: str):
-    min_idx= 0
-    max_idx= len(container)-1
-    
-    middle_idx = (max_idx+min_idx)//2
-    
-
-    if container[middle_idx]==element:
-        return middle_idx
-    elif min_idx==middle_idx:
-        return -1
-    
-    else:
-        if container[middle_idx]> element:
-            return binary_search(container[min_idx:middle_idx], element)
-        else:
-            return binary_search(container[middle_idx:max_idx], element)
+# Performs a binary search of a tuple 'container' looking for 'element'.
+def binary_search(container, element):
+    min = 0
+    max = len(container) - 1
+    mid = 0
+    # Continue while bounds are still reasonable.
+    while min <= max:
+        # Calculate midpoint of max and min.
+        mid = (max + min) // 2
+        # Is element the same as container element?
+        if container[mid] == element:
+            return mid
+        # Is element greater than container element?
+        elif container[mid] > element:
+            max = mid - 1
+        # Is element less than container element?
+        elif container[mid] < element:
+            min = mid + 1
+    return None
 
 def main():
-    string_data = sd.get_data()
-    test_string= ["not_here", "aaaaa", "mzzzz", "aegfe", "gerbe", "hello"]
-    
-    print()
-    for string in test_string:
-        print(f"Test word: {string}")
-        
-        init_time = time.time()
-        print(linear_search(string_data, string))
-        lin_time = time.time()- init_time
-    
-        print(binary_search(string_data, string))
-        
-        bin_time = time.time()- (lin_time + init_time)
-        
-        print(f"Linear Search Time: {lin_time}")
-        print(f"Binary Search Time: {bin_time}")
-        print("___________________________")
-        print()
-        
+    time.perf_counter()
+    # Generate Data
+    data = stringdata.get_data()
+
+    print("Search 'not_here' with linear_search.")
+
+    time_start = time.time()
+    index = binary_search(data, "not_here")
+    # Calculate delta time
+    time_delta = time.time() - time_start
+
+    print("Time:", time_delta)
+
 if __name__ == "__main__":
     main()
