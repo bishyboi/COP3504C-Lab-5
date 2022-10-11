@@ -3,14 +3,43 @@
 #include <vector>
 #include "StringData.h"
 
-int linearSearch(std::vector<std::string> container, std::string element)
+int linearSearch(std::vector<std::string> container, std::string element);
+int binarySearch(std::vector<std::string> *containerPtr, std::string element, int startIndex, int endIndex);
+
+int main()
 {
-    for( int word_idx=0; word_idx<container.size(); word_idx++)
+    std::vector<std::string> stringData = getStringData();
+    //std::vector<std::string> testString = {"not_here", "aaaaa", "mzzzz", "aegfe", "gerbe", "hello", "zzzzz"};
+    std::vector<std::string> testString = {"aaaaa", "gerbe", "hello", "zzzzz"};
+
+    for(std::string searchWord:testString)
     {
-        if (container[word_idx]==element)
-            return word_idx;
+        std::cout<<"Search Term: " << searchWord <<std::endl;
+        long long initTime = systemTimeNanoseconds();
+        
+        std::cout<<"Linear: " << linearSearch(stringData, searchWord) << std::endl;
+        long long linTime = systemTimeNanoseconds();
+
+        std::cout<<"Linear Time: " << linTime-initTime << "ms" << std::endl;
+
+        std::cout<<"Binary: " << binarySearch(&stringData, searchWord,0, stringData.size()-1) << std::endl;
+        long long binTime = systemTimeNanoseconds();
+
+        std::cout<<"Binary Time: " << binTime-linTime << "ms"<< std::endl<<std::endl;
     }
 
+    return 0;
+}
+
+int linearSearch(std::vector<std::string> container, std::string element)
+{
+    for(int i = 0; i < container.size(); i++)
+    {
+        if(container[i] == element)
+        {
+            return i;
+        }
+    }
     return -1;
 }
 
@@ -39,19 +68,4 @@ int binarySearch(std::vector<std::string> container, std::string element, int st
             return binarySearch(container, element, middle_idx+1, max_idx);
         }
     }
-}
-
-int main()
-{
-    std::vector<std::string> stringData = getStringData();
-    //std::vector<std::string> testString = {"not_here", "aaaaa", "mzzzz", "aegfe", "gerbe", "hello", "zzzzz"};
-    std::vector<std::string> testString = {"aaaaa", "gerbe", "hello", "zzzzz"};
-
-    for(std::string searchWord:testString)
-    {
-        std::cout<<"Search Term: " << searchWord <<std::endl;
-        std::cout<<"Linear: "<<linearSearch(stringData, searchWord)<<std::endl;
-        std::cout<<"Binary: "<<binarySearch(stringData, searchWord,0, stringData.size()-1)<<std::endl<<std::endl;
-    }
-    return 0;
 }
