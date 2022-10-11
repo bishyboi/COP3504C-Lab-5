@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <chrono>
 #include "StringData.h"
 
 int linearSearch(std::vector<std::string> container, std::string element);
@@ -9,8 +10,7 @@ int binarySearch(std::vector<std::string> *containerPtr, std::string element, in
 int main()
 {
     std::vector<std::string> stringData = getStringData();
-    //std::vector<std::string> testString = {"not_here", "aaaaa", "mzzzz", "aegfe", "gerbe", "hello", "zzzzz"};
-    std::vector<std::string> testString = {"aaaaa", "gerbe", "hello", "zzzzz"};
+    std::vector<std::string> testString = {"not_here", "aaaaa", "mzzzz", "aegfe", "gerbe", "hello", "zzzzz"};
 
     for(std::string searchWord:testString)
     {
@@ -43,7 +43,7 @@ int linearSearch(std::vector<std::string> container, std::string element)
     return -1;
 }
 
-int binarySearch(std::vector<std::string> container, std::string element, int startIndex, int endIndex)
+int binarySearch(std::vector<std::string> *containerPtr, std::string element, int startIndex, int endIndex)
 {
     int min_idx = startIndex;
     int max_idx = endIndex;
@@ -51,21 +51,21 @@ int binarySearch(std::vector<std::string> container, std::string element, int st
 
     if (min_idx > max_idx)
         return -1;
-    else if (container[middle_idx] == element)
+    else if ((*containerPtr)[middle_idx] == element)
     {
         return middle_idx;
     }
     else
     {
-        if (element < container[middle_idx])
+        if (element < (*containerPtr)[middle_idx])
         {
             //Slice the container into the lower half
-            return binarySearch(container, element, min_idx, middle_idx-1);
+            return binarySearch(containerPtr, element, min_idx, middle_idx-1);
         }
         else
         {
             //Slice container into upper half
-            return binarySearch(container, element, middle_idx+1, max_idx);
+            return binarySearch(containerPtr, element, middle_idx+1, max_idx);
         }
     }
 }
