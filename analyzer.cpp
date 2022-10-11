@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <chrono>
 #include "StringData.h"
 
 int linearSearch(std::vector<std::string> container, std::string element)
@@ -14,7 +15,7 @@ int linearSearch(std::vector<std::string> container, std::string element)
     return -1;
 }
 
-int binarySearch(std::vector<std::string> container, std::string element, int startIndex, int endIndex)
+int binarySearch(std::vector<std::string> *containerPtr, std::string element, int startIndex, int endIndex)
 {
     int min_idx = startIndex;
     int max_idx = endIndex;
@@ -22,21 +23,21 @@ int binarySearch(std::vector<std::string> container, std::string element, int st
 
     if (min_idx > max_idx)
         return -1;
-    else if (container[middle_idx] == element)
+    else if ((*containerPtr)[middle_idx] == element)
     {
         return middle_idx;
     }
     else
     {
-        if (element < container[middle_idx])
+        if (element < (*containerPtr)[middle_idx])
         {
             //Slice the container into the lower half
-            return binarySearch(container, element, min_idx, middle_idx-1);
+            return binarySearch(containerPtr, element, min_idx, middle_idx-1);
         }
         else
         {
             //Slice container into upper half
-            return binarySearch(container, element, middle_idx+1, max_idx);
+            return binarySearch(containerPtr, element, middle_idx+1, max_idx);
         }
     }
 }
@@ -50,8 +51,18 @@ int main()
     for(std::string searchWord:testString)
     {
         std::cout<<"Search Term: " << searchWord <<std::endl;
-        std::cout<<"Linear: "<<linearSearch(stringData, searchWord)<<std::endl;
-        std::cout<<"Binary: "<<binarySearch(stringData, searchWord,0, stringData.size()-1)<<std::endl<<std::endl;
+        long long initTime = systemTimeNanoseconds();
+        
+        std::cout<<"Linear: " << linearSearch(stringData, searchWord) << std::endl;
+        long long linTime = systemTimeNanoseconds();
+
+        std::cout<<"Linear Time: " << linTime-initTime << "ms" << std::endl;
+
+        std::cout<<"Binary: " << binarySearch(&stringData, searchWord,0, stringData.size()-1) << std::endl;
+        long long binTime = systemTimeNanoseconds();
+
+        std::cout<<"Binary Time: " << binTime-linTime << "ms"<< std::endl<<std::endl;
     }
+
     return 0;
 }
